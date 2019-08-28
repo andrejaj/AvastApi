@@ -12,10 +12,10 @@ using Microsoft.Extensions.Logging;
 
 namespace AvastApi.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CommandController : ControllerBase
-    {
+	[Route("api/[controller]")]
+	[ApiController]
+	public class CommandController : ControllerBase
+	{
 		private readonly ILogger _logger;
 		private readonly ICommandUtility _commandUtility;
 		public CommandController(ILogger<CommandController> logger, ICommandUtility commandUtility)
@@ -25,7 +25,7 @@ namespace AvastApi.Controllers
 		}
 
 		// GET api/values
-		[HttpGet(Name = "EpochTime")]
+		[HttpGet("epochtime")]
 		public ActionResult<double> GetEpochTime()
 		{
 			try
@@ -33,14 +33,14 @@ namespace AvastApi.Controllers
 				var currentEpochTime = this._commandUtility.GetEpochTimeMilliseconds();
 				return Ok(currentEpochTime);
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				this._logger.LogError($"Something went wrong, cannot retrive Current Epoch Time {ex}");
 				return StatusCode(500, "Internal server error");
 			}
 		}
 
-		[HttpGet(Name="NBytes")]
+		[HttpGet("nbytes/{fileName}/{length}")]
 		public ActionResult<byte[]> GetNBytes(string fileName, int length)
 		{
 			try
@@ -55,12 +55,13 @@ namespace AvastApi.Controllers
 			}
 		}
 
-		[HttpGet(Name="Content")]
+		[HttpGet("content/{uri}")]
 		public ActionResult<string> GetContent(string uri)
 		{
 			try
 			{
-				var content = this._commandUtility.GetContent(uri);
+				var url = "http://{uri}";
+				var content = this._commandUtility.GetContent(url);
 				return Ok(content);
 			}
 			catch(Exception ex)
