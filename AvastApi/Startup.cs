@@ -14,6 +14,7 @@ using AvastApi.Extensions;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 using AvastApi.Utility;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace AvastApi
 {
@@ -33,6 +34,15 @@ namespace AvastApi
 
 			services.AddMvc();
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+			services.AddSwaggerGen(c =>
+			{
+				c.SwaggerDoc("v1", new Info { Title = "AvastAPI", Version = "v1.0"});
+				// Configure the XML comments file path for the Swagger JSON and UI.
+				var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+				c.IncludeXmlComments(System.IO.Path.Combine(AppContext.BaseDirectory, xmlFile));
+			});
+
 			services.ConfigureCors();
 		}
 
@@ -57,6 +67,13 @@ namespace AvastApi
 			}
 
 			app.UseHttpsRedirection();
+
+			app.UseSwagger();
+			app.UseSwaggerUI(c =>
+			{
+				// specifying the Swagger JSON endpoint.
+				c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger Demo");
+			});
 
 			app.UseMvc();
 		}
