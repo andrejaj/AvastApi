@@ -12,7 +12,7 @@ namespace AvastApi.Utility
 {
 	internal class CommandUtility : ICommandUtility
 	{
-		public double GetEpochTimeMilliseconds()
+		public double GetTimeNowInMilliseconds()
 		{
 			return (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds;
 		}

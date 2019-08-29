@@ -7,7 +7,7 @@ namespace AvastApi.Utility
 {
 	public interface ICommandUtility
 	{
-		double GetEpochTimeMilliseconds();
+		double GetTimeNowInMilliseconds();
 		byte[] GetNBytes(string fileName, int Size);
 		string GetContent(string uri);
 	}

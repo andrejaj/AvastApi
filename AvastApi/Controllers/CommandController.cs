@@ -24,14 +24,20 @@ namespace AvastApi.Controllers
 			this._commandUtility = commandUtility ?? throw new ArgumentNullException(nameof(commandUtility));
 		}
 
+		/// <summary>
+		/// Get current time in milliseconds
+		/// </summary>
+		/// <returns>double</returns>
 		// GET api/values
-		[HttpGet("epochtime")]
-		public ActionResult<double> GetEpochTime()
+		[HttpGet("timenow")]
+		[ProducesResponseType(typeof(double), 200)]
+		[ProducesResponseType(500)]
+		public ActionResult<double> GetTimeNowInMilliseconds()
 		{
 			try
 			{
-				var currentEpochTime = this._commandUtility.GetEpochTimeMilliseconds();
-				return Ok(currentEpochTime);
+				var timeNow = this._commandUtility.GetTimeNowInMilliseconds();
+				return Ok(timeNow);
 			}
 			catch (Exception ex)
 			{
@@ -40,27 +46,41 @@ namespace AvastApi.Controllers
 			}
 		}
 
-		[HttpGet("nbytes/{fileName}/{length}")]
-		public ActionResult<byte[]> GetNBytes(string fileName, int length)
+		/// <summary>
+		/// Get first n bytes from a 'DemoFile.txt' file.
+		/// </summary>
+		/// <param name="length">Length of bytes to take from a file.</param>
+		/// <returns>byte[]</returns>
+		[HttpGet("nbytes/{length}")]
+		[ProducesResponseType(typeof(byte[]), 200)]
+		[ProducesResponseType(500)]
+		public ActionResult<byte[]> GetNBytes(int length)
 		{
 			try
 			{
-				var nbytes = this._commandUtility.GetNBytes(fileName, length);
+				var nbytes = this._commandUtility.GetNBytes("DemoFile.txt", length);
 				return Ok(nbytes);
 			}
 			catch(Exception ex)
 			{
-				this._logger.LogError($"Something went wrong, cannot receive from file {fileName} nbytes {ex}");
+				this._logger.LogError($"Something went wrong, cannot receive nbytes from a file. {ex}");
 				return StatusCode(500, "Internal server error");
 			}
 		}
 
+		/// <summary>
+		/// Get content of a URL.
+		/// </summary>
+		/// <param name="uri">Uri to fetch content from.</param>
+		/// <returns>string</returns>
 		[HttpGet("content/{uri}")]
+		[ProducesResponseType(typeof(string), 200)]
+		[ProducesResponseType(500)]
 		public ActionResult<string> GetContent(string uri)
 		{
 			try
 			{
-				var url = "http://{uri}";
+				var url = $"http://{uri}";
 				var content = this._commandUtility.GetContent(url);
 				return Ok(content);
 			}

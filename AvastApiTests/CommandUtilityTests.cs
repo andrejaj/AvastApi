@@ -20,7 +20,7 @@ namespace Tests
 		public void EpochTime_Not_Zero()
 		{
 			//Act
-			var epochTime = commandUtility.GetEpochTimeMilliseconds();
+			var epochTime = commandUtility.GetTimeNowInMilliseconds();
 
 			//Assert
 			Assert.NotZero(epochTime);

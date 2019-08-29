@@ -28,10 +28,10 @@ namespace Tests
 		public void Epoch_Time_Received()
 		{
 			var value = HelperMethods.GetRandomNumber(1.0, 2.0);
-			_commandUtilityMock.Setup(x => x.GetEpochTimeMilliseconds()).Returns(value);
+			_commandUtilityMock.Setup(x => x.GetTimeNowInMilliseconds()).Returns(value);
 			_commandController = new CommandController(_loggerMock.Object, _commandUtilityMock.Object);
 
-			var response = _commandController.GetEpochTime();
+			var response = _commandController.GetTimeNowInMilliseconds();
 			var content = (OkObjectResult)response.Result;
 			Assert.IsInstanceOf<OkObjectResult>(response.Result);
 			Assert.AreEqual(value,  content.Value);
@@ -41,11 +41,11 @@ namespace Tests
 		public void Epoch_Time_Throws_Exception()
 		{
 			//Arrange
-			_commandUtilityMock.Setup(x => x.GetEpochTimeMilliseconds()).Throws(new Exception());
+			_commandUtilityMock.Setup(x => x.GetTimeNowInMilliseconds()).Throws(new Exception());
 			_commandController = new CommandController(_loggerMock.Object, _commandUtilityMock.Object);
 
 			//Act
-			var response = _commandController.GetEpochTime();
+			var response = _commandController.GetTimeNowInMilliseconds();
 			var content = (ObjectResult)response.Result;
 
 			//Assert
@@ -63,7 +63,7 @@ namespace Tests
 			_commandController = new CommandController(_loggerMock.Object, _commandUtilityMock.Object);
 
 			//Act
-			var response = _commandController.GetNBytes(new Guid().ToString(), bytes.Length);
+			var response = _commandController.GetNBytes(bytes.Length);
 
 			//Act
 			var content = (OkObjectResult)response.Result;
@@ -80,7 +80,7 @@ namespace Tests
 			_commandController = new CommandController(_loggerMock.Object, _commandUtilityMock.Object);
 
 			//Act
-			var response = _commandController.GetNBytes(new Guid().ToString(), 1);
+			var response = _commandController.GetNBytes(1);
 
 			//Act
 			var content = (ObjectResult)response.Result;
